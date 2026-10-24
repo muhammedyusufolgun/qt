@@ -2,7 +2,7 @@ package com.olgun.qr;
 import android.app.*;import android.os.*;import android.content.*;import android.graphics.*;import android.net.Uri;import android.provider.MediaStore;import android.content.ContentValues;import android.view.*;import android.widget.*;import java.io.*;import com.google.zxing.*;import com.google.zxing.common.BitMatrix;import com.google.zxing.qrcode.QRCodeWriter;import com.google.zxing.EncodeHintType;import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;import java.util.*;
 public class MainActivity extends Activity {
  EditText input;ImageView preview;Spinner sizes;Bitmap qr,logo;TextView status;
- int[] px={256,512,1024,2048};int PICK=12;
+ int[] px={256,512,1024,2048};int PICK=12;int buttonIndex=0;
  public void onCreate(Bundle b){super.onCreate(b);getWindow().setStatusBarColor(Color.WHITE);getWindow().setNavigationBarColor(Color.WHITE);getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR|View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
  ScrollView scroll=new ScrollView(this);scroll.setFillViewport(true);scroll.setClipToPadding(false);scroll.setBackgroundColor(Color.rgb(247,248,250));LinearLayout root=new LinearLayout(this);root.setOrientation(1);root.setPadding(dp(22),dp(30),dp(22),dp(40));scroll.addView(root);setContentView(scroll);getWindow().getDecorView().setOnApplyWindowInsetsListener((v,insets)->{android.graphics.Insets bars=insets.getInsets(android.view.WindowInsets.Type.systemBars());scroll.setPadding(0,bars.top,0,bars.bottom);return insets;});
  
@@ -14,7 +14,8 @@ public class MainActivity extends Activity {
  sizes=new Spinner(this);ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,new String[]{"256 × 256","512 × 512","1024 × 1024","2048 × 2048"});sizes.setAdapter(adapter);sizes.setSelection(1);root.addView(sizes);
  button(root,"↓ PNG OLARAK KAYDET",()->generate(true));button(root,"METNİ KOPYALA",()->{((android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("QR",input.getText().toString()));message("Metin kopyalandı");});
  button(root,"YENİDEN BAŞLA",()->{input.setText("");preview.setImageDrawable(null);preview.setVisibility(View.GONE);preview.setLayoutParams(new LinearLayout.LayoutParams(-1,0));getPreferences(0).edit().remove("text").apply();});
- status=new TextView(this);status.setTextColor(Color.DKGRAY);status.setPadding(0,16,0,10);root.addView(status);
+ status=new TextView(this);status.setTextColor(Color.DKGRAY);status.setPadding(0,dp(16),0,dp(10));root.addView(status);
+ TextView footer=new TextView(this);footer.setText("Muhammed Yusf OLGUN");footer.setTextSize(12);footer.setTypeface(android.graphics.Typeface.create("sans-serif",android.graphics.Typeface.ITALIC));footer.setTextColor(Color.rgb(95,103,114));footer.setGravity(Gravity.CENTER);footer.setPadding(0,dp(24),0,dp(8));root.addView(footer,new LinearLayout.LayoutParams(-1,-2));
  
  }
  void heading(LinearLayout r,String s){TextView t=new TextView(this);t.setText(s);t.setTextSize(12);t.setTypeface(null,1);t.setTextColor(Color.BLACK);t.setPadding(0,dp(24),0,dp(10));r.addView(t);}
@@ -22,12 +23,10 @@ public class MainActivity extends Activity {
  void button(LinearLayout r,String label,Runnable action){
  TextView b=new TextView(this);
  b.setText(label);b.setTextSize(13);b.setTypeface(null,1);
- b.setTextColor(Color.WHITE);b.setGravity(Gravity.CENTER);
- int color=Color.rgb(29,78,216);
- if(label.contains("KAYDET"))color=Color.rgb(5,150,105);
- else if(label.contains("KALDIR")||label.contains("BAŞLA"))color=Color.rgb(100,116,139);
- else if(label.contains("KOPYALA"))color=Color.rgb(109,40,217);
- else if(label.contains("LOGO SEÇ"))color=Color.rgb(3,105,161);
+ b.setGravity(Gravity.CENTER);
+ int[] colors={Color.rgb(187,247,208),Color.rgb(254,249,195),Color.rgb(254,202,202),Color.rgb(17,24,39),Color.rgb(229,231,235),Color.rgb(55,65,81)};
+ int color=colors[Math.min(buttonIndex++,colors.length-1)];
+ b.setTextColor((buttonIndex==4||buttonIndex==6)?Color.WHITE:Color.rgb(17,24,39));
  android.graphics.drawable.GradientDrawable bg=new android.graphics.drawable.GradientDrawable();
  bg.setColor(color);bg.setCornerRadius(dp(12));
  b.setBackground(bg);b.setClickable(true);b.setFocusable(true);
