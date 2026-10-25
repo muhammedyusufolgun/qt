@@ -13,7 +13,7 @@ public class MainActivity extends Activity {
  heading(root,"03   ÖNİZLEME & DIŞA AKTAR");preview=new ImageView(this);preview.setBackgroundColor(Color.WHITE);preview.setAdjustViewBounds(true);preview.setScaleType(ImageView.ScaleType.FIT_CENTER);preview.setVisibility(View.GONE);root.addView(preview,new LinearLayout.LayoutParams(-1,0));
  sizes=new Spinner(this);ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,new String[]{"256 × 256","512 × 512","1024 × 1024","2048 × 2048"});sizes.setAdapter(adapter);sizes.setSelection(1);root.addView(sizes);
  button(root,"↓ PNG OLARAK KAYDET",()->generate(true));button(root,"METNİ KOPYALA",()->{((android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("QR",input.getText().toString()));message("Metin kopyalandı");});
- button(root,"YENİDEN BAŞLA",()->{input.setText("");preview.setImageDrawable(null);preview.setVisibility(View.GONE);preview.setLayoutParams(new LinearLayout.LayoutParams(-1,0));getPreferences(0).edit().remove("text").apply();});
+ button(root,"Yeni QR Oluştur",()->{input.setText("");preview.setImageDrawable(null);preview.setVisibility(View.GONE);preview.setLayoutParams(new LinearLayout.LayoutParams(-1,0));getPreferences(0).edit().remove("text").apply();});
  button(root,"QR Barkod Seç/Oku",()->chooseQrImage());
  status=new TextView(this);status.setTextColor(Color.DKGRAY);status.setPadding(0,dp(16),0,dp(10));root.addView(status);
  TextView footer=new TextView(this);footer.setText("Muhammed Yusuf OLGUN");footer.setTextSize(12);footer.setTypeface(android.graphics.Typeface.create("sans-serif",android.graphics.Typeface.ITALIC));footer.setTextColor(Color.rgb(95,103,114));footer.setGravity(Gravity.CENTER);footer.setPadding(0,dp(24),0,dp(8));root.addView(footer,new LinearLayout.LayoutParams(-1,-2));
@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
  Intent intent=new Intent(Intent.ACTION_OPEN_DOCUMENT);
  intent.addCategory(Intent.CATEGORY_OPENABLE);
  intent.setType("image/*");
- intent.putExtra(android.provider.DocumentsContract.EXTRA_INITIAL_URI,android.net.Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADownload"));
+ intent.putExtra(android.provider.DocumentsContract.EXTRA_INITIAL_URI,android.net.Uri.parse("content://com.android.externalstorage.documents/document/primary%3APictures%2FQR"));
  try{startActivityForResult(intent,PICK_QR);}catch(Exception e){message("Dosya seçici açılamadı: "+e.getMessage());}
  }
  void readQrImage(Uri uri){
